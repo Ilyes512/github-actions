@@ -27,7 +27,6 @@ jobs:
           string: ${{ inputs.image-name }}
       - name: Log in to the Container registry
         uses: docker/login-action@v3
-        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
