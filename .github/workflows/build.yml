@@ -36,11 +36,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Make sure cache dir exists
-        run: mkdir -p /tmp/.buildx-cache
+        run: mkdir -p ${{ runner.temp }}/.buildx-cache
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-cache
+          path: ${{ runner.temp }}/.buildx-cache
           key: ${{ inputs.cache-key }}
           restore-keys: ${{ inputs.cache-restore-keys }}
       - name: Log in to the Container registry

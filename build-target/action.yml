@@ -52,18 +52,18 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
+        cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache
     - name: Export digest (${{ inputs.target }})
       shell: bash
       run: |
-        mkdir -p /tmp/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
+        mkdir -p ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
         digest="${{ steps.build.outputs.digest }}"
-        touch "/tmp/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/${digest#sha256:}"
+        touch "${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/${digest#sha256:}"
     - name: Upload digest (${{ inputs.target }})
       uses: actions/upload-artifact@v4
       with:
         name: digests-${{ env.SAFE_IMAGE_NAME }}-${{ inputs.target }}-${{ env.PLATFORM_PAIR }}
-        path: /tmp/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/*
+        path: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/*
         if-no-files-found: error
         retention-days: 1

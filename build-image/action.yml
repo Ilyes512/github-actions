@@ -38,18 +38,18 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
+        cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache
     - name: Export digest
       shell: bash
       run: |
-        mkdir -p /tmp/digests
+        mkdir -p ${{ runner.temp }}/digests
         digest="${{ steps.build.outputs.digest }}"
-        touch "/tmp/digests/${digest#sha256:}"
+        touch "${{ runner.temp }}/digests/${digest#sha256:}"
     - name: Upload digest
       uses: actions/upload-artifact@v4
       with:
         name: digests-${{ env.PLATFORM_PAIR }}
-        path: /tmp/digests/*
+        path: ${{ runner.temp }}/digests/*
         if-no-files-found: error
         retention-days: 1
