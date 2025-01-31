@@ -52,8 +52,8 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
-        cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
-        cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache-new
+        cache-from: type=gha,scope="${{ inputs.dockerfile }}-${{ inputs.target }}"
+        cache-to: type=gha,mode=max,scope="${{ inputs.dockerfile }}-${{ inputs.target }}"
     - name: Export digest (${{ inputs.target }})
       shell: bash
       run: |
