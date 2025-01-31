@@ -9,6 +9,10 @@ inputs:
     description: Name of the dockerfile target
     type: string
     required: true
+  raw-tag:
+    description: Raw tag value
+    type: string
+    default: latest
 
 runs:
   using: composite
@@ -24,17 +28,22 @@ runs:
         path: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
         pattern: digests-${{ env.SAFE_IMAGE_NAME }}-${{ inputs.target }}-*
         merge-multiple: true
+    - name: Raw tag
+      id: raw_tag
+      uses: ASzc/change-string-case-action@v6
+      with:
+        string: ${{ inputs.raw-tag }}
     - name: Docker meta (${{ inputs.target }})
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.image-name }}
-        flavor: |
-          prefix=${{ inputs.target }}-,onlatest=true
+        flavor: prefix=${{ inputs.target }}-,onlatest=true
         tags: |
           type=ref,event=branch
           type=ref,event=tag
           type=ref,event=pr,prefix=${{ inputs.target }}-pr-
+          type=raw,event=workflow_dispatch,prefix=${{ inputs.target }}-,value=${{ steps.raw_tag.outputs.lowercase }}
     - name: Create manifest list and push (${{ inputs.target }})
       working-directory: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
       shell: bash
