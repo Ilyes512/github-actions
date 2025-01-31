@@ -53,7 +53,7 @@ runs:
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
         cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache-new
+        cache-to: type=local,dest=/tmp/.buildx-cache
     - name: Export digest (${{ inputs.target }})
       shell: bash
       run: |
