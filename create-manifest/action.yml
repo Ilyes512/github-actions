@@ -12,7 +12,7 @@ runs:
     - name: Download digests
       uses: actions/download-artifact@v4
       with:
-        path: /tmp/digests
+        path: ${{ runner.temp }}/digests
         pattern: digests-*
         merge-multiple: true
     - name: Docker meta
@@ -21,7 +21,7 @@ runs:
       with:
         images: ${{ inputs.image-name }}
     - name: Create manifest list and push
-      working-directory: /tmp/digests
+      working-directory: ${{ runner.temp }}/digests
       shell: bash
       run: |
         docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
