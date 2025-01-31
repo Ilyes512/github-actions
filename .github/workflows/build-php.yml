@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Make sure cache dir exists
+        run: mkdir -p /tmp/.buildx-cache
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
