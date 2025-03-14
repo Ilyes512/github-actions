@@ -38,8 +38,8 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
-        cache-from: type=gha,scope=${{ inputs.dockerfile }}
-        cache-to: type=gha,mode=max,scope=${{ inputs.dockerfile }}
+        cache-from: type=gha,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}
+        cache-to: type=gha,mode=max,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}
     - name: Export digest
       shell: bash
       run: |
