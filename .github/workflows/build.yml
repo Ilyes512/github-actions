@@ -42,7 +42,7 @@ jobs:
         with:
           string: ${{ inputs.image-name }}
       - name: Build and Push by digest
-        uses: Ilyes512/github-actions/build-image@1.0.3
+        uses: Ilyes512/github-actions/build-image@1.0.4
         with:
           platform: ${{ inputs.platform }}
           image-name: ${{ steps.image_name.outputs.lowercase }}
