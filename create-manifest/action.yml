@@ -5,6 +5,10 @@ inputs:
     description: Name of the image
     type: string
     required: true
+  raw-tag:
+    description: Raw tag value
+    type: string
+    default: latest
 
 runs:
   using: composite
@@ -15,11 +19,22 @@ runs:
         path: ${{ runner.temp }}/digests
         pattern: digests-*
         merge-multiple: true
+    - name: Raw tag
+      id: raw_tag
+      uses: ASzc/change-string-case-action@v6
+      with:
+        string: ${{ inputs.raw-tag }}
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.image-name }}
+        tags: |
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=tag
+          type=ref,event=pr
+          type=raw,event=workflow_dispatch,value=${{ steps.raw_tag.outputs.lowercase }}
     - name: Create manifest list and push
       working-directory: ${{ runner.temp }}/digests
       shell: bash

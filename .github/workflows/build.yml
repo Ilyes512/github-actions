@@ -44,5 +44,6 @@ jobs:
       - name: Build and Push by digest
         uses: Ilyes512/github-actions/build-image@1.0.4
         with:
+          dockerfile: ${{ inputs.dockerfile }}
           platform: ${{ inputs.platform }}
           image-name: ${{ steps.image_name.outputs.lowercase }}
