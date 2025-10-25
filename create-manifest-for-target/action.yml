@@ -40,6 +40,7 @@ runs:
         images: ${{ inputs.image-name }}
         flavor: prefix=${{ inputs.target }}-,onlatest=true
         tags: |
+          type=schedule
           type=ref,event=branch
           type=ref,event=tag
           type=ref,event=pr,prefix=${{ inputs.target }}-pr-
