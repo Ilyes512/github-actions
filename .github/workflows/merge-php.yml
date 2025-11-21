@@ -19,7 +19,7 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Image name
         id: image_name
         uses: ASzc/change-string-case-action@v6
