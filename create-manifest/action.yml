@@ -39,8 +39,11 @@ runs:
       working-directory: ${{ runner.temp }}/digests
       shell: bash
       run: |
-        docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-        $(printf '${{ inputs.image-name }}@sha256:%s ' *)
+        tags=$(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        annotations=$(jq -cr '.labels | to_entries | map("--annotation \"" + .key + "=" + .value + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        images=$(printf '${{ inputs.image-name }}@sha256:%s ' *)
+
+        docker buildx imagetools create $tags $annotations $images
     - name: Inspect image
       shell: bash
       run: |
