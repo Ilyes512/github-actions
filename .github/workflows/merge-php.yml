@@ -34,17 +34,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Create Manifest (runtime)
-        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.5
+        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.6
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: runtime
       - name: Create Manifest (builder)
-        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.5
+        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.6
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: builder
       - name: Create Manifest (builder_nodejs)
-        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.5
+        uses: Ilyes512/github-actions/create-manifest-for-target@1.0.6
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: builder_nodejs
