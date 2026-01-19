@@ -61,8 +61,11 @@ runs:
       working-directory: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
       shell: bash
       run: |
-        docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-        $(printf '${{ inputs.image-name }}@sha256:%s ' *)
+        mapfile -t tags < <(jq -r '.tags[] | "-t\n" + .' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        mapfile -t annotations < <(jq -r '.labels | to_entries[] | "--annotation\nindex:" + .key + "=" + .value' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        images=$(printf '${{ inputs.image-name }}@sha256:%s ' *)
+        
+        docker buildx imagetools create "${tags[@]}" "${annotations[@]}" $images
     - name: Inspect image
       shell: bash
       run: |
