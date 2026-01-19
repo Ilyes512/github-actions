@@ -1,4 +1,5 @@
 name: Build Image
+description: Build and push Docker image by digest
 
 inputs:
   platform:

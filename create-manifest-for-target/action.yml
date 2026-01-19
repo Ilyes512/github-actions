@@ -1,4 +1,5 @@
 name: Create Manifest for Target
+description: Creates and pushes a Docker manifest list for a specific build target
 
 inputs:
   image-name:
@@ -13,6 +14,14 @@ inputs:
     description: Raw tag value
     type: string
     default: latest
+  title:
+    description: Custom image title (overrides repository name)
+    type: string
+    required: false
+  description:
+    description: Custom image description (overrides repository description)
+    type: string
+    required: false
 
 runs:
   using: composite
@@ -45,12 +54,18 @@ runs:
           type=ref,event=tag
           type=ref,event=pr,prefix=${{ inputs.target }}-pr-
           type=raw,event=workflow_dispatch,prefix=${{ inputs.target }}-,value=${{ steps.raw_tag.outputs.lowercase }}
+        labels: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Create manifest list and push (${{ inputs.target }})
       working-directory: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
       shell: bash
       run: |
-        docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-        $(printf '${{ inputs.image-name }}@sha256:%s ' *)
+        mapfile -t tags < <(jq -r '.tags[] | "-t\n" + .' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        mapfile -t annotations < <(jq -r '.labels | to_entries[] | "--annotation\nindex:" + .key + "=" + .value' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        images=$(printf '${{ inputs.image-name }}@sha256:%s ' *)
+        
+        docker buildx imagetools create "${tags[@]}" "${annotations[@]}" $images
     - name: Inspect image
       shell: bash
       run: |

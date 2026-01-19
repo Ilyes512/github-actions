@@ -1,4 +1,5 @@
 name: Create Manifest
+description: Creates and pushes a multi-platform Docker manifest
 
 inputs:
   image-name:
@@ -9,6 +10,14 @@ inputs:
     description: Raw tag value
     type: string
     default: latest
+  title:
+    description: Custom image title (overrides repository name)
+    type: string
+    required: false
+  description:
+    description: Custom image description (overrides repository description)
+    type: string
+    required: false
 
 runs:
   using: composite
@@ -35,15 +44,18 @@ runs:
           type=ref,event=tag
           type=ref,event=pr
           type=raw,event=workflow_dispatch,value=${{ steps.raw_tag.outputs.lowercase }}
+        labels: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Create manifest list and push
       working-directory: ${{ runner.temp }}/digests
       shell: bash
       run: |
-        tags=$(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
-        annotations=$(jq -cr '.labels | to_entries | map("--annotation \"" + .key + "=" + .value + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        mapfile -t tags < <(jq -r '.tags[] | "-t\n" + .' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        mapfile -t annotations < <(jq -r '.labels | to_entries[] | "--annotation\nindex:" + .key + "=" + .value' <<< "$DOCKER_METADATA_OUTPUT_JSON")
         images=$(printf '${{ inputs.image-name }}@sha256:%s ' *)
 
-        docker buildx imagetools create $tags $annotations $images
+        docker buildx imagetools create "${tags[@]}" "${annotations[@]}" $images
     - name: Inspect image
       shell: bash
       run: |
