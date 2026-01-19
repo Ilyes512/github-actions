@@ -1,4 +1,5 @@
 name: Create Manifest for Target
+description: Creates and pushes a Docker manifest list for a specific build target
 
 inputs:
   image-name:

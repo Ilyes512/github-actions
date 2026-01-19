@@ -1,4 +1,5 @@
 name: Create Manifest
+description: Creates and pushes a multi-platform Docker manifest
 
 inputs:
   image-name:
