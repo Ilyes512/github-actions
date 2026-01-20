@@ -11,6 +11,14 @@ on:
         description: Image name
         type: string
         required: true
+      title:
+        description: Custom image title (overrides repository name)
+        type: string
+        required: false
+      description:
+        description: Custom image description (overrides repository description)
+        type: string
+        required: false
 
 jobs:
   merge:
@@ -37,3 +45,5 @@ jobs:
         uses: Ilyes512/github-actions/create-manifest@1.0.7
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
+          title: ${{ inputs.title }}
+          description: ${{ inputs.description }}
