@@ -11,6 +11,31 @@ on:
         description: Image name
         type: string
         required: true
+      title-runtime:
+        description: Custom image title for runtime (overrides repository name)
+        type: string
+        required: false
+      description-runtime:
+        description: Custom image description for runtime (overrides repository description)
+        type: string
+        required: false
+      title-builder:
+        description: Custom image title for builder (overrides repository name)
+        type: string
+        required: false
+      description-builder:
+        description: Custom image description for builder (overrides repository description)
+        type: string
+        required: false
+      title-builder_nodejs:
+        description: Custom image title for builder_nodejs (overrides repository name)
+        type: string
+        required: false
+      description-builder_nodejs:
+        description: Custom image description for builder_nodejs (overrides repository description)
+        type: string
+        required: false
+
 
 jobs:
   merge:
@@ -38,13 +63,19 @@ jobs:
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: runtime
+          description: ${{ inputs.description-runtime }}
+          title: ${{ inputs.title-runtime }}
       - name: Create Manifest (builder)
         uses: Ilyes512/github-actions/create-manifest-for-target@1.0.7
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: builder
+          description: ${{ inputs.description-builder }}
+          title: ${{ inputs.title-builder }}
       - name: Create Manifest (builder_nodejs)
         uses: Ilyes512/github-actions/create-manifest-for-target@1.0.7
         with:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           target: builder_nodejs
+          description: ${{ inputs.description-builder_nodejs }}
+          title: ${{ inputs.title-builder_nodejs }}
