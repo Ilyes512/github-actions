@@ -14,10 +14,6 @@ inputs:
     description: Dockerfile path
     type: string
     required: true
-  raw-tag:
-    description: Raw tag value
-    type: string
-    default: latest
   title:
     description: Custom image title (overrides repository name)
     type: string
@@ -35,22 +31,11 @@ runs:
       run: |
         platform=${{ inputs.platform }}
         echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-    - name: Raw tag
-      id: raw_tag
-      uses: ASzc/change-string-case-action@v6
-      with:
-        string: ${{ inputs.raw-tag }}
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.image-name }}
-        tags: |
-          type=schedule
-          type=ref,event=branch
-          type=ref,event=tag
-          type=ref,event=pr
-          type=raw,event=workflow_dispatch,value=${{ steps.raw_tag.outputs.lowercase }}
         labels: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
