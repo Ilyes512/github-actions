@@ -19,6 +19,14 @@ on:
         description: Dockerfile path
         type: string
         default: Dockerfile
+      title:
+        description: Custom image title (overrides repository name)
+        type: string
+        required: false
+      description:
+        description: Custom image description (overrides repository description)
+        type: string
+        required: false
 
 jobs:
   build:
@@ -47,3 +55,5 @@ jobs:
           dockerfile: ${{ inputs.dockerfile }}
           platform: ${{ inputs.platform }}
           image-name: ${{ steps.image_name.outputs.lowercase }}
+          title: ${{ inputs.title }}
+          description: ${{ inputs.description }}
