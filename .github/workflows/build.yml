@@ -19,6 +19,14 @@ on:
         description: Dockerfile path
         type: string
         default: Dockerfile
+      title:
+        description: Custom image title (overrides repository name)
+        type: string
+        required: false
+      description:
+        description: Custom image description (overrides repository description)
+        type: string
+        required: false
 
 jobs:
   build:
@@ -42,8 +50,10 @@ jobs:
         with:
           string: ${{ inputs.image-name }}
       - name: Build and Push by digest
-        uses: Ilyes512/github-actions/build-image@1.0.9
+        uses: Ilyes512/github-actions/build-image@1.0.10
         with:
           dockerfile: ${{ inputs.dockerfile }}
           platform: ${{ inputs.platform }}
           image-name: ${{ steps.image_name.outputs.lowercase }}
+          title: ${{ inputs.title }}
+          description: ${{ inputs.description }}
