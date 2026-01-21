@@ -18,10 +18,14 @@ inputs:
     description: Name of the dockerfile target
     type: string
     required: true
-  raw-tag:
-    description: Raw tag value
+  title:
+    description: Custom image title (overrides repository name)
     type: string
-    default: latest
+    required: false
+  description:
+    description: Custom image description (overrides repository description)
+    type: string
+    required: false
 
 runs:
   using: composite
@@ -34,23 +38,14 @@ runs:
 
         image_name=${{ inputs.image-name }}
         echo "SAFE_IMAGE_NAME=${image_name//\//-}" >> $GITHUB_ENV
-    - name: Raw tag
-      id: raw_tag
-      uses: ASzc/change-string-case-action@v6
-      with:
-        string: ${{ inputs.raw-tag }}
     - name: Docker meta (${{ inputs.target }})
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.image-name }}
-        flavor: prefix=${{ inputs.target }}-,onlatest=true
-        tags: |
-          type=schedule
-          type=ref,event=branch
-          type=ref,event=tag
-          type=ref,event=pr,prefix=${{ inputs.target }}-pr-
-          type=raw,event=workflow_dispatch,prefix=${{ inputs.target }}-,value=${{ steps.raw_tag.outputs.lowercase }}
+        labels: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Build and push by digest (${{ inputs.target }})
       id: build
       uses: docker/build-push-action@v5
