@@ -22,6 +22,14 @@ inputs:
     description: Raw tag value
     type: string
     default: latest
+  title:
+    description: Custom image title (overrides repository name)
+    type: string
+    required: false
+  description:
+    description: Custom image description (overrides repository description)
+    type: string
+    required: false
 
 runs:
   using: composite
@@ -51,6 +59,9 @@ runs:
           type=ref,event=tag
           type=ref,event=pr,prefix=${{ inputs.target }}-pr-
           type=raw,event=workflow_dispatch,prefix=${{ inputs.target }}-,value=${{ steps.raw_tag.outputs.lowercase }}
+        labels: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Build and push by digest (${{ inputs.target }})
       id: build
       uses: docker/build-push-action@v5
