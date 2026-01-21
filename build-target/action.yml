@@ -57,7 +57,7 @@ runs:
         target: ${{ inputs.target }}
         labels: ${{ steps.meta.outputs.labels }}
         provenance: false
-        outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true
+        outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true,oci-mediatypes=true
         cache-from: type=gha,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}-${{ inputs.target }}
         cache-to: type=gha,mode=max,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}-${{ inputs.target }}
     - name: Export digest (${{ inputs.target }})
