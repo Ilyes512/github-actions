@@ -47,6 +47,9 @@ runs:
         labels: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
+        annotations: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Create manifest list and push
       working-directory: ${{ runner.temp }}/digests
       shell: bash
