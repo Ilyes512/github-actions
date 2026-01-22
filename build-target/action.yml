@@ -46,6 +46,9 @@ runs:
         labels: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
+        annotations: |
+          ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
+          ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Build and push by digest (${{ inputs.target }})
       id: build
       uses: docker/build-push-action@v5
@@ -56,6 +59,7 @@ runs:
         platforms: ${{ inputs.platform }}
         target: ${{ inputs.target }}
         labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
         provenance: false
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true,oci-mediatypes=true
         cache-from: type=gha,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}-${{ inputs.target }}
