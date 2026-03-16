@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Image name
         id: image_name
-        uses: ASzc/change-string-case-action@v6
+        uses: ASzc/change-string-case-action@v8
         with:
           string: ${{ inputs.image-name }}
       - name: Log in to the Container registry
