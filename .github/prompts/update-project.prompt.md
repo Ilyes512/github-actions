@@ -45,7 +45,7 @@ current. A newer major version may exist.
      update it to the latest release tag.
    - If the reference is pinned to a commit SHA, leave it as-is — do not convert SHA pins to tags.
 3. Skip self-referencing actions (actions that reference the current repository, e.g.
-`Ilyes512/github-actions/build-image@1.0.12`) — they are handled in Phase 4.
+`specsnl/github-actions/build-image@1.0.12`) — they are handled in Phase 4.
 4. Update any outdated action versions in-place across all scanned files.
 5. Check `git status` for all changed files. Commit separately if there are any changes.
 Commit message: `chore(deps): Update GitHub Actions versions`.
@@ -74,7 +74,7 @@ Commit message: `chore: Update copyright year`.
    - Files to scan: same as Phase 2 (`.github/workflows/*.yml`, `.github/actions/**/*.yml`,
      `*/action.yml`)
    - Self-referencing actions are those that reference the current repository
-     (e.g., `Ilyes512/github-actions/*@<version>`)
+     (e.g., `specsnl/github-actions/*@<version>`)
    - Update every occurrence across all files before committing — all changes go into a single commit.
 5. If any files were changed, stage them all and create one commit.
    Commit message: `chore: Bump self-referencing actions to <new-version>`.
