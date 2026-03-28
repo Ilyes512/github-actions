@@ -23,19 +23,19 @@ runs:
   using: composite
   steps:
     - name: Download digests
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: ${{ runner.temp }}/digests
         pattern: digests-*
         merge-multiple: true
     - name: Raw tag
       id: raw_tag
-      uses: ASzc/change-string-case-action@v6
+      uses: ASzc/change-string-case-action@v8
       with:
         string: ${{ inputs.raw-tag }}
     - name: Docker meta
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ inputs.image-name }}
         tags: |

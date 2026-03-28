@@ -57,7 +57,7 @@ Abort on any failure.
 
 1. Check if the `LICENSE` file contains a year range (e.g. `2020-2025`) or a single year (e.g. `2024`).
 2. If the current year (2026) is not already the end year:
-   - If the LICENSE file contains a single year (e.g. `2024`) → expand to a range: `2024-2026`.
+   - If the LICENSE file contains a single year (e.g. `2024`) → update it to the current year: `2026`.
    - If the LICENSE file contains a year range (e.g. `2020-2025`) → update the end year: `2020-2026`.
 3. If the LICENSE file already ends with the current year (e.g. `2024-2026` or `2026`), no update is needed.
 4. Commit separately if there are any changes.

@@ -32,19 +32,19 @@ runs:
         image_name=${{ inputs.image-name }}
         echo "SAFE_IMAGE_NAME=${image_name//\//-}" >> $GITHUB_ENV
     - name: Download digests (${{ inputs.target }})
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
         pattern: digests-${{ env.SAFE_IMAGE_NAME }}-${{ inputs.target }}-*
         merge-multiple: true
     - name: Raw tag
       id: raw_tag
-      uses: ASzc/change-string-case-action@v6
+      uses: ASzc/change-string-case-action@v8
       with:
         string: ${{ inputs.raw-tag }}
     - name: Docker meta (${{ inputs.target }})
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ inputs.image-name }}
         flavor: prefix=${{ inputs.target }}-,onlatest=true
