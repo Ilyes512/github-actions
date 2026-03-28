@@ -40,7 +40,7 @@ runs:
         echo "SAFE_IMAGE_NAME=${image_name//\//-}" >> $GITHUB_ENV
     - name: Docker meta (${{ inputs.target }})
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ inputs.image-name }}
         labels: |
@@ -51,7 +51,7 @@ runs:
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
     - name: Build and push by digest (${{ inputs.target }})
       id: build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v7
       with:
         push: ${{ github.actor != 'dependabot[bot]' }}
         context: .
@@ -71,7 +71,7 @@ runs:
         digest="${{ steps.build.outputs.digest }}"
         touch "${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/${digest#sha256:}"
     - name: Upload digest (${{ inputs.target }})
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: digests-${{ env.SAFE_IMAGE_NAME }}-${{ inputs.target }}-${{ env.PLATFORM_PAIR }}
         path: ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/*
