@@ -22,6 +22,10 @@ inputs:
     description: Custom image description (overrides repository description)
     type: string
     required: false
+  secrets:
+    description: List of secrets to expose to the build
+    type: string
+    required: false
 
 runs:
   using: composite
@@ -56,6 +60,7 @@ runs:
         outputs: type=image,name=${{ inputs.image-name }},push-by-digest=true,name-canonical=true,oci-mediatypes=true
         cache-from: type=gha,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,mode=max,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}
+        secrets: ${{ inputs.secrets }}
     - name: Export digest
       shell: bash
       run: |
