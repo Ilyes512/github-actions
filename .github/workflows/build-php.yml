@@ -25,13 +25,16 @@ jobs:
     name: Build Image
     runs-on: ${{ inputs.runs-on }}
     steps:
+
       - name: Checkout
         uses: actions/checkout@v6
+
       - name: Image name
         id: image_name
         uses: ASzc/change-string-case-action@v8
         with:
           string: ${{ inputs.image-name }}
+
       - name: Log in to the Container registry
         uses: docker/login-action@v4
         if: ${{ github.actor != 'dependabot[bot]' }}
@@ -39,9 +42,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v4
+
       - name: Build and Push by digest (runtime)
         uses: specsnl/github-actions/build-target@1.2.0
         with:
@@ -49,6 +54,7 @@ jobs:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           dockerfile: ${{ inputs.dockerfile }}
           target: runtime
+
       - name: Build and Push by digest (builder)
         uses: specsnl/github-actions/build-target@1.2.0
         with:
@@ -56,6 +62,7 @@ jobs:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           dockerfile: ${{ inputs.dockerfile }}
           target: builder
+
       - name: Build and Push by digest (builder_nodejs)
         uses: specsnl/github-actions/build-target@1.2.0
         with:

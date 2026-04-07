@@ -28,11 +28,13 @@ runs:
         path: ${{ runner.temp }}/digests
         pattern: digests-*
         merge-multiple: true
+
     - name: Raw tag
       id: raw_tag
       uses: ASzc/change-string-case-action@v8
       with:
         string: ${{ inputs.raw-tag }}
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v6
@@ -50,6 +52,7 @@ runs:
         annotations: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
+
     - name: Create manifest list and push
       working-directory: ${{ runner.temp }}/digests
       shell: bash
@@ -62,6 +65,7 @@ runs:
         images=$(printf '${{ inputs.image-name }}@sha256:%s ' *)
 
         docker buildx imagetools create "${tags[@]}" "${annotations[@]}" $images
+        
     - name: Inspect image
       shell: bash
       run: |
