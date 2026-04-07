@@ -27,6 +27,10 @@ on:
         description: Custom image description (overrides repository description)
         type: string
         required: false
+      secrets:
+        description: List of secrets to expose to the build
+        type: string
+        required: false
       disable-apparmor:
         description: Disable AppArmor for the build
         type: boolean
@@ -70,3 +74,4 @@ jobs:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           title: ${{ inputs.title }}
           description: ${{ inputs.description }}
+          secrets: ${{ inputs.secrets }}
