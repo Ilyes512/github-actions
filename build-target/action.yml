@@ -34,6 +34,7 @@ inputs:
 runs:
   using: composite
   steps:
+
     - name: Prepare
       shell: bash
       run: |
@@ -42,6 +43,7 @@ runs:
 
         image_name=${{ inputs.image-name }}
         echo "SAFE_IMAGE_NAME=${image_name//\//-}" >> $GITHUB_ENV
+
     - name: Docker meta (${{ inputs.target }})
       id: meta
       uses: docker/metadata-action@v6
@@ -53,6 +55,7 @@ runs:
         annotations: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
+
     - name: Build and push by digest (${{ inputs.target }})
       id: build
       uses: docker/build-push-action@v7
@@ -69,12 +72,14 @@ runs:
         cache-from: type=gha,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}-${{ inputs.target }}
         cache-to: type=gha,mode=max,scope=${{ inputs.dockerfile }}-${{ env.PLATFORM_PAIR }}-${{ inputs.target }}
         secrets: ${{ inputs.secrets }}
+
     - name: Export digest (${{ inputs.target }})
       shell: bash
       run: |
         mkdir -p ${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}
         digest="${{ steps.build.outputs.digest }}"
         touch "${{ runner.temp }}/digests/${{ env.SAFE_IMAGE_NAME }}/${{ inputs.target }}/${digest#sha256:}"
+
     - name: Upload digest (${{ inputs.target }})
       uses: actions/upload-artifact@v7
       with:
