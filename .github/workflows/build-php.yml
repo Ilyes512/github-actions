@@ -19,6 +19,10 @@ on:
         description: Dockerfile path
         type: string
         default: Dockerfile
+      disable-apparmor:
+        description: Disable AppArmor for the build
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -42,6 +46,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Disable AppArmor
+        if: ${{ inputs.disable-apparmor }}
+        uses: cisagov/action-disable-apparmor@v1
 
       - name: Set up Docker Buildx
         id: buildx

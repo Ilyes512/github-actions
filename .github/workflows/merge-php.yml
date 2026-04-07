@@ -36,7 +36,6 @@ on:
         type: string
         required: false
 
-
 jobs:
   merge:
     name: Merge Images
@@ -78,7 +77,7 @@ jobs:
           target: builder
           description: ${{ inputs.description-builder }}
           title: ${{ inputs.title-builder }}
-          
+
       - name: Create Manifest (builder_nodejs)
         uses: specsnl/github-actions/create-manifest-for-target@1.2.0
         with:
