@@ -1,0 +1,73 @@
+name: Notify Slack on Tag
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Runner name i.e. default runner "ubuntu-24.04"
+        type: string
+        required: true
+      channel:
+        description: Slack channel to notify i.e. "#releases"
+        type: string
+        default: "#releases"
+    secrets:
+      slack-webhook-url:
+        description: Slack Incoming Webhook URL
+        required: true
+
+jobs:
+  notify:
+    name: Slack Notification
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.slack-webhook-url }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "channel": "${{ inputs.channel }}",
+              "text": "Tag `${{ github.ref_name }}` created in ${{ github.repository }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*New tag created*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Tag:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Created by:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Tag"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+                    }
+                  ]
+                }
+              ]
+            }
