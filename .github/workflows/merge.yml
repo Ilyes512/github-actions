@@ -19,6 +19,10 @@ on:
         description: Custom image description (overrides repository description)
         type: string
         required: false
+      raw-tag:
+        description: Raw tag value
+        type: string
+        default: latest
 
 jobs:
   merge:
@@ -52,3 +56,4 @@ jobs:
           image-name: ${{ steps.image_name.outputs.lowercase }}
           title: ${{ inputs.title }}
           description: ${{ inputs.description }}
+          raw-tag: ${{ inputs.raw-tag }}

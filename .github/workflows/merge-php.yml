@@ -35,6 +35,10 @@ on:
         description: Custom image description for builder_nodejs (overrides repository description)
         type: string
         required: false
+      raw-tag:
+        description: Raw tag value
+        type: string
+        default: latest
 
 jobs:
   merge:
@@ -69,6 +73,7 @@ jobs:
           target: runtime
           description: ${{ inputs.description-runtime }}
           title: ${{ inputs.title-runtime }}
+          raw-tag: ${{ inputs.raw-tag }}
 
       - name: Create Manifest (builder)
         uses: specsnl/github-actions/create-manifest-for-target@1.2.1
@@ -77,6 +82,7 @@ jobs:
           target: builder
           description: ${{ inputs.description-builder }}
           title: ${{ inputs.title-builder }}
+          raw-tag: ${{ inputs.raw-tag }}
 
       - name: Create Manifest (builder_nodejs)
         uses: specsnl/github-actions/create-manifest-for-target@1.2.1
@@ -85,3 +91,4 @@ jobs:
           target: builder_nodejs
           description: ${{ inputs.description-builder_nodejs }}
           title: ${{ inputs.title-builder_nodejs }}
+          raw-tag: ${{ inputs.raw-tag }}
