@@ -30,6 +30,10 @@ inputs:
     description: List of secrets to expose to the build
     type: string
     required: false
+  raw-tag:
+    description: Raw tag value
+    type: string
+    default: latest
 
 runs:
   using: composite
@@ -44,11 +48,19 @@ runs:
         image_name=${{ inputs.image-name }}
         echo "SAFE_IMAGE_NAME=${image_name//\//-}" >> $GITHUB_ENV
 
+    - name: Raw tag
+      id: raw_tag
+      uses: ASzc/change-string-case-action@v8
+      with:
+        string: ${{ inputs.raw-tag }}
+
     - name: Docker meta (${{ inputs.target }})
       id: meta
       uses: docker/metadata-action@v6
       with:
         images: ${{ inputs.image-name }}
+        tags: |
+          type=raw,event=workflow_dispatch,value=${{ steps.raw_tag.outputs.lowercase }}
         labels: |
           ${{ inputs.title != '' && format('org.opencontainers.image.title={0}', inputs.title) || '' }}
           ${{ inputs.description != '' && format('org.opencontainers.image.description={0}', inputs.description) || '' }}
